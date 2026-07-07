@@ -1,0 +1,28 @@
+app:
+  db_url: "sqlite:///data/catalog.db"
+  log_level: "INFO"
+
+sources:
+  openlibrary:
+    base_url: "https://openlibrary.org"
+    user_agent: "reading-catalog/0.1 (contact: deb.sandeep@gmail.com)"
+    timeout_seconds: 10
+    max_retries: 3
+    request_delay_seconds: 0.5
+  hardcover:
+    enabled: false
+    base_url: "https://api.hardcover.app/v1/graphql"
+  googlebooks:
+    enabled: false
+    base_url: "https://www.googleapis.com/books/v1"
+
+discovery:
+  openlibrary:
+    subjects: ["fiction"]
+    limit_per_subject: 20
+
+filters:
+  min_rating: 4.0
+  reader_threshold_mode: "percentile"
+  reader_percentile: 75
+  reader_absolute_floor: 10000

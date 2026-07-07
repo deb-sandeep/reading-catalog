@@ -1,0 +1,43 @@
+{
+  "key": "/subjects/fiction",
+  "works": [
+    {
+      "key": "/works/OL66554W",
+      "title": "Pride and Prejudice",
+      "authors": [
+        {
+          "key": "/authors/OL21594A",
+          "name": "Jane Austen"
+        }
+      ],
+      "first_publish_year": 1813,
+      "cover_edition_key": "OL47044678M",
+      "subject": [
+        "Fiction, Romance, Historical, Regency",
+        "British and Irish fiction (fictional works by one author)",
+        "Brothers and sisters",
+        "Courtship",
+        "Drama"
+      ]
+    },
+    {
+      "key": "/works/OL138052W",
+      "title": "Alice's Adventures in Wonderland",
+      "authors": [
+        {
+          "key": "/authors/OL22098A",
+          "name": "Lewis Carroll"
+        }
+      ],
+      "first_publish_year": 1865,
+      "cover_edition_key": "OL31754751M",
+      "subject": [
+        "Alice (fictitious character : carroll), fiction",
+        "British and irish fiction (fictional works by one author)",
+        "Fiction, fantasy, general",
+        "JUVENILE FICTION",
+        "classics"
+      ]
+    }
+  ]
+}
