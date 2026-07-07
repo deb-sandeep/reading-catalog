@@ -89,7 +89,9 @@ class HardcoverClient:
             raise HardcoverAPIError(str(body["errors"]))
         return body["data"]
 
-    def search_books(self, query: str, per_page: int = 25, page: int = 1) -> list[dict]:
+    def search_books(self, query: str, per_page: int = 25, page: int = 1) -> tuple[list[dict], int]:
+        """Returns (hits, total_found) - `found` is Typesense's total match
+        count across all pages, used to drive UI pagination."""
         graphql_query = (
             f"query {{ search(query: {_graphql_string_literal(query)}, "
             f'query_type: "Book", per_page: {per_page}, page: {page}) {{ results }} }}'
@@ -97,25 +99,26 @@ class HardcoverClient:
         data = self._post_graphql(graphql_query)
         results = data["search"]["results"]
         if not results:
-            return []
-        return [hit["document"] for hit in results.get("hits", [])]
+            return [], 0
+        hits = [hit["document"] for hit in results.get("hits", [])]
+        return hits, results.get("found", len(hits))
 
     def fetch_top_rated_books(self, min_rating: float, min_ratings_count: int, limit: int = 100) -> list[dict]:
         graphql_query = (
             "query { books("
             f"where: {{rating: {{_gte: {min_rating}}}, ratings_count: {{_gte: {min_ratings_count}}}}}, "
             f"order_by: {{ratings_count: desc}}, limit: {limit}"
-            ") { title rating ratings_count release_year cached_tags "
+            ") { id title slug rating ratings_count release_year cached_tags "
             "contributions { author { name } } editions(limit: 3) { isbn_13 isbn_10 } } }"
         )
         data = self._post_graphql(graphql_query)
         return data["books"]
 
     def find_by_isbn13(self, isbn13: str) -> dict | None:
-        hits = self.search_books(isbn13, per_page=1)
+        hits, _ = self.search_books(isbn13, per_page=1)
         return hits[0] if hits else None
 
     def find_by_title_author(self, title: str, author: str | None = None) -> dict | None:
         query = f"{title} {author}" if author else title
-        hits = self.search_books(query, per_page=1)
+        hits, _ = self.search_books(query, per_page=1)
         return hits[0] if hits else None
