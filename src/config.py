@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import yaml
+from dotenv import load_dotenv
 from pydantic import BaseModel
 
 
@@ -22,11 +24,19 @@ class OpenLibrarySourceConfig(BaseModel):
 class HardcoverSourceConfig(BaseModel):
     enabled: bool = False
     base_url: str
+    api_token: str | None = None
+    timeout_seconds: float = 30
+    max_retries: int = 3
+    request_delay_seconds: float = 1.0
 
 
 class GoogleBooksSourceConfig(BaseModel):
     enabled: bool = False
     base_url: str
+    api_key: str | None = None
+    timeout_seconds: float = 10
+    max_retries: int = 3
+    request_delay_seconds: float = 0.2
 
 
 class SourcesConfig(BaseModel):
@@ -59,5 +69,9 @@ class Config(BaseModel):
 
 
 def load_config(path: str | Path = "config.yaml") -> Config:
+    load_dotenv()
     raw = yaml.safe_load(Path(path).read_text())
-    return Config.model_validate(raw)
+    config = Config.model_validate(raw)
+    config.sources.hardcover.api_token = os.environ.get("HARDCOVER_API_TOKEN")
+    config.sources.googlebooks.api_key = os.environ.get("GOOGLE_BOOKS_API_KEY")
+    return config

@@ -1,13 +1,19 @@
 from __future__ import annotations
 
 import datetime
+import enum
 
-from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Table, Text, Column
+from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Integer, String, Table, Text, Column
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class Base(DeclarativeBase):
     pass
+
+
+class LibraryStatus(str, enum.Enum):
+    WORKING = "working"
+    CURATED = "curated"
 
 
 book_authors = Table(
@@ -37,6 +43,12 @@ class Book(Base):
     publish_year: Mapped[int | None] = mapped_column(Integer, nullable=True)
     source_confidence: Mapped[float | None] = mapped_column(Float, nullable=True)
     last_checked_at: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False)
+
+    library_status: Mapped[str] = mapped_column(String, nullable=False, default=LibraryStatus.WORKING.value)
+    have_ebook: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    is_read: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    reading_sequence: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    my_rating: Mapped[float | None] = mapped_column(Float, nullable=True)
 
     authors: Mapped[list["Author"]] = relationship(secondary=book_authors, back_populates="books")
     genres: Mapped[list["Genre"]] = relationship(secondary=book_genres, back_populates="books")

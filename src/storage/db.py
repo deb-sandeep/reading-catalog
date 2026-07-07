@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from contextlib import contextmanager
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func, inspect, text
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from src.pipeline.models import BookRecord
-from src.storage.db_models import Author, Base, Book, Genre, SourceRecord
+from src.storage.db_models import Author, Base, Book, Genre, LibraryStatus, SourceRecord
 
 
 def make_engine(db_url: str) -> Engine:
@@ -16,6 +16,28 @@ def make_engine(db_url: str) -> Engine:
 
 def init_db(engine: Engine) -> None:
     Base.metadata.create_all(engine)
+    _sync_book_columns(engine)
+
+
+def _sync_book_columns(engine: Engine) -> None:
+    """Adds columns introduced after the original `books` table was created,
+    so a pre-existing data/catalog.db upgrades in place with no separate
+    migration step. No-op on a fresh DB (create_all already has everything)."""
+    inspector = inspect(engine)
+    if "books" not in inspector.get_table_names():
+        return
+    existing = {c["name"] for c in inspector.get_columns("books")}
+    additions = {
+        "library_status": f"VARCHAR NOT NULL DEFAULT '{LibraryStatus.WORKING.value}'",
+        "have_ebook": "BOOLEAN NOT NULL DEFAULT 0",
+        "is_read": "BOOLEAN NOT NULL DEFAULT 0",
+        "reading_sequence": "INTEGER",
+        "my_rating": "FLOAT",
+    }
+    with engine.begin() as conn:
+        for column, ddl in additions.items():
+            if column not in existing:
+                conn.execute(text(f"ALTER TABLE books ADD COLUMN {column} {ddl}"))
 
 
 def make_session_factory(engine: Engine) -> sessionmaker[Session]:
@@ -117,3 +139,30 @@ def upsert_book(session: Session, record: BookRecord) -> tuple[Book, bool]:
     )
 
     return book, created
+
+
+def import_to_working_shelf(session: Session, record: BookRecord) -> tuple[Book, bool]:
+    """Upsert via the normal merge logic, then set library_status only on
+    newly-created rows. Never touches status on a book that already exists
+    (whether working or curated) - re-importing a search hit must not demote
+    a curated book back to working."""
+    book, created = upsert_book(session, record)
+    if created:
+        book.library_status = LibraryStatus.WORKING.value
+    return book, created
+
+
+def promote_to_curated(session: Session, book: Book) -> Book:
+    """Moves a book from the working shelf to the curated library, assigning
+    it the next available reading_sequence. Idempotent - promoting an
+    already-curated book is a no-op."""
+    if book.library_status == LibraryStatus.CURATED.value:
+        return book
+    max_sequence = (
+        session.query(func.max(Book.reading_sequence))
+        .filter(Book.library_status == LibraryStatus.CURATED.value)
+        .scalar()
+    )
+    book.library_status = LibraryStatus.CURATED.value
+    book.reading_sequence = (max_sequence or 0) + 1
+    return book

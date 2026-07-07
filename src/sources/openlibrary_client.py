@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import time
+from urllib.parse import urlencode
 
 import httpx
 from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
@@ -73,3 +74,20 @@ class OpenLibraryClient:
         if response.status_code == 404:
             return None
         return response.json()
+
+    def search(
+        self,
+        isbn: str | None = None,
+        title: str | None = None,
+        author: str | None = None,
+        limit: int = 1,
+    ) -> dict | None:
+        """General /search.json lookup by isbn13 and/or title/author - used
+        only by the working-shelf rich-view single-book lookup, distinct from
+        the subject-browse discovery flow. At least one of isbn/title must be
+        given. Returns the first matching doc, or None."""
+        params = {k: v for k, v in {"isbn": isbn, "title": title, "author": author}.items() if v}
+        params["limit"] = limit
+        response = self._get(f"/search.json?{urlencode(params)}")
+        docs = response.json().get("docs") or []
+        return docs[0] if docs else None

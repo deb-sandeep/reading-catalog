@@ -1,0 +1,13 @@
+{
+  "id": "test_id_no_isbn",
+  "volumeInfo": {
+    "title": "Untitled Rarity",
+    "authors": [],
+    "publishedDate": null,
+    "description": null,
+    "industryIdentifiers": [],
+    "categories": [],
+    "averageRating": null,
+    "ratingsCount": null
+  }
+}

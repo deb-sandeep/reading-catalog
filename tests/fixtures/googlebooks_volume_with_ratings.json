@@ -1,0 +1,22 @@
+{
+  "id": "test_id_with_ratings",
+  "volumeInfo": {
+    "title": "Harry Potter and the Deathly Hallows",
+    "authors": [
+      "J.K. Rowling"
+    ],
+    "publishedDate": "2010",
+    "description": "The seventh and final book...",
+    "industryIdentifiers": [
+      {
+        "type": "ISBN_13",
+        "identifier": "9780545139700"
+      }
+    ],
+    "categories": [
+      "Fiction"
+    ],
+    "averageRating": 4.5,
+    "ratingsCount": 90
+  }
+}

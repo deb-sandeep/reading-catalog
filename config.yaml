@@ -10,10 +10,10 @@ sources:
     max_retries: 3
     request_delay_seconds: 0.5
   hardcover:
-    enabled: false
+    enabled: true
     base_url: "https://api.hardcover.app/v1/graphql"
   googlebooks:
-    enabled: false
+    enabled: true
     base_url: "https://www.googleapis.com/books/v1"
 
 discovery:
@@ -25,4 +25,8 @@ filters:
   min_rating: 4.0
   reader_threshold_mode: "percentile"
   reader_percentile: 75
-  reader_absolute_floor: 10000
+  # NOTE: Hardcover's scale is much smaller than Goodreads' - its single
+  # most-rated book currently has ~9,567 ratings (live-checked), so a
+  # Goodreads-scale floor like 10000 zeroes out every genre search. 100 is a
+  # sensible default for Hardcover's actual catalog size.
+  reader_absolute_floor: 100

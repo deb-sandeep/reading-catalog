@@ -1,0 +1,26 @@
+{
+  "id": "saONEAAAQBAJ",
+  "volumeInfo": {
+    "title": "Dune",
+    "authors": [
+      "Frank Herbert"
+    ],
+    "publishedDate": "2005-08-02",
+    "description": "NOW A MAJOR MOTION PICTURE directed by Denis Villeneuve, starring Timoth\u00e9e Chalamet, Zendaya, Jason Momoa, Rebecca Ferguson, Oscar Isaac, Josh Brolin, Stellan Skarsg\u00e5rd, Dave Bautista, David Dastmalch...",
+    "industryIdentifiers": [
+      {
+        "type": "ISBN_13",
+        "identifier": "9780441013593"
+      },
+      {
+        "type": "ISBN_10",
+        "identifier": "0441013597"
+      }
+    ],
+    "categories": [
+      "Fiction"
+    ],
+    "averageRating": null,
+    "ratingsCount": null
+  }
+}

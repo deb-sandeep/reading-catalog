@@ -1,0 +1,71 @@
+{
+  "title": "Harry Potter and the Philosopher's Stone",
+  "contributions": [
+    {
+      "author": {
+        "name": "J.K. Rowling"
+      }
+    }
+  ],
+  "rating": 4.278352670638654,
+  "ratings_count": 9567,
+  "release_year": 1997,
+  "cached_tags": {
+    "Genre": [
+      {
+        "tag": "Fantasy",
+        "count": 37,
+        "tagSlug": "fantasy",
+        "category": "Genre",
+        "categorySlug": "genre",
+        "spoilerRatio": 0.0
+      },
+      {
+        "tag": "Fiction",
+        "count": 20,
+        "tagSlug": "fiction",
+        "category": "Genre",
+        "categorySlug": "genre",
+        "spoilerRatio": 0.05
+      },
+      {
+        "tag": "Young Adult",
+        "count": 17,
+        "tagSlug": "young-adult",
+        "category": "Genre",
+        "categorySlug": "genre",
+        "spoilerRatio": 0.0
+      },
+      {
+        "tag": "Magic",
+        "count": 9,
+        "tagSlug": "magic",
+        "category": "Genre",
+        "categorySlug": "genre",
+        "spoilerRatio": 0.0
+      },
+      {
+        "tag": "Adventure",
+        "count": 7,
+        "tagSlug": "adventure",
+        "category": "Genre",
+        "categorySlug": "genre",
+        "spoilerRatio": 0.0
+      }
+    ]
+  },
+  "editions": [
+    {
+      "isbn_13": "9780807281956",
+      "isbn_10": "0807281956"
+    },
+    {
+      "isbn_13": null,
+      "isbn_10": null
+    },
+    {
+      "isbn_13": "9781338596700",
+      "isbn_10": "1338596705"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "test_id_isbn10_only",
+  "volumeInfo": {
+    "title": "Some Old Edition",
+    "authors": [
+      "Some Author"
+    ],
+    "publishedDate": "1965",
+    "description": null,
+    "industryIdentifiers": [
+      {
+        "type": "ISBN_10",
+        "identifier": "0306406152"
+      }
+    ],
+    "categories": [],
+    "averageRating": null,
+    "ratingsCount": null
+  }
+}
